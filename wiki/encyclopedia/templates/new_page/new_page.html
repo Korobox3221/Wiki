@@ -1,0 +1,49 @@
+{% extends "encyclopedia/layout.html"%}
+{% block title %}New page{% endblock %}
+{% block body %}
+<style>
+textarea {
+  width: 100%;
+  height: 400px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background: #24f2d3;
+  font-size: 16px;
+  resize: none;
+  placeholder: "En
+
+}
+div>input{
+      display: flex;
+      z-index: 3;
+      position: relative;
+      min-height: 44px;
+      border: 1px solid transparent;
+      background: #24f2d3;
+      box-shadow: none;
+      border-radius: 24px;
+      margin: 0 auto;
+      width: 700px;
+      margin-top: 30px;
+      font-family: Arial, sans-serif;
+      font-size: 17px;
+      placeholder: "Enter page title";
+      text-align: center
+}
+
+</style>
+<h1 style = "text-align: center;">Create New Page</h1>
+
+<form method = "POST">
+    {% csrf_token %}
+    <div>
+        <input name = title  type = "text" placeholder = "Enter page title:" color = "white" required>
+    </div>
+    <br>
+    <textarea id="contentid" name="content" placeholder = "Enter page content:" required></textarea>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}
