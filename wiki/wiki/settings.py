@@ -28,12 +28,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 SECRET_KEY = os.environ.get('SECRET_KEY', 'default-fallback-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1').split(',') 
 
 # --- НАСТРОЙКА БАЗЫ ДАННЫХ ---
-DATABASES = {
+if os.environ.get('DB_HOST'):
+    DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             # Читаем все 5 переменных из окружения (Render)
@@ -47,6 +48,14 @@ DATABASES = {
             'OPTIONS': {
                 'sslmode': 'require',
             },
+        }
+    }
+else:
+    # Запасной вариант (для локальной разработки, если переменные не заданы)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'), 
         }
     }
 
