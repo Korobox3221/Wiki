@@ -9,11 +9,15 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
+import os 
 import dj_database_url
-import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+load_dotenv() 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent 
 
 
 # Quick-start development settings - unsuitable for production
@@ -24,27 +28,24 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 SECRET_KEY = os.environ.get('SECRET_KEY', 'default-fallback-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1').split(',') 
 
 # --- НАСТРОЙКА БАЗЫ ДАННЫХ ---
-if 'DATABASE_URL' in os.environ:
+
     # Используем dj-database-url для парсинга строки подключения из переменной окружения
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
-            conn_max_age=600  # Добавьте, чтобы избежать проблем с таймаутами
-        )
-    }
-else:
-    # Запасной вариант (для локальной разработки без DATABASE_URL)
-    DATABASES = {
+DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': 'KoroDB3221WIKI',
+            'HOST': 'afgfuuwcrggvudysfubj.supabase.co',
+            'PORT': '5432'
         }
     }
+
 
 # Application definition
 
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
