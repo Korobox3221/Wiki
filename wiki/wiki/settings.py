@@ -33,19 +33,24 @@ DEBUG = True
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1').split(',') 
 
 # --- НАСТРОЙКА БАЗЫ ДАННЫХ ---
-
+if 'DATABASE_URL' in os.environ:
     # Используем dj-database-url для парсинга строки подключения из переменной окружения
-DATABASES = {
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600  # Добавьте, чтобы избежать проблем с таймаутами
+        )
+    }
+    print('supabase')
+else:
+    # Запасной вариант (для локальной разработки без DATABASE_URL)
+    DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'postgres',
-            'USER': 'postgres',
-            'PASSWORD': 'KoroDB3221WIKI',
-            'HOST': 'afgfuuwcrggvudysfubj.supabase.co',
-            'PORT': '5432'
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
-
+    print(os.environ.get("DATABASE_URL"))
 
 # Application definition
 
