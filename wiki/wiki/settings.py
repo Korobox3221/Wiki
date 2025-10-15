@@ -33,24 +33,22 @@ DEBUG = True
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1').split(',') 
 
 # --- НАСТРОЙКА БАЗЫ ДАННЫХ ---
-if 'DATABASE_URL' in os.environ:
-    # Используем dj-database-url для парсинга строки подключения из переменной окружения
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
-            conn_max_age=600  # Добавьте, чтобы избежать проблем с таймаутами
-        )
-    }
-    print('supabase')
-else:
-    # Запасной вариант (для локальной разработки без DATABASE_URL)
-    DATABASES = {
+DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'ENGINE': 'django.db.backends.postgresql',
+            # Читаем все 5 переменных из окружения (Render)
+            'NAME': os.environ.get('DB_NAME'),        # Имя БД: 'postgres'
+            'USER': os.environ.get('DB_USER'),        # Пользователь: 'postgres'
+            'PASSWORD': os.environ.get('DB_PASSWORD'),# Пароль
+            'HOST': os.environ.get('DB_HOST'),        # Хост: db.[ID].supabase.co
+            'PORT': os.environ.get('DB_PORT'),  # Порт: 5432
+            
+            # Добавляем SSL, который нужен Supabase
+            'OPTIONS': {
+                'sslmode': 'require',
+            },
         }
     }
-    print(os.environ.get("DATABASE_URL"))
 
 # Application definition
 
